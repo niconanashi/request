@@ -7,14 +7,15 @@
     /* Add your custom styles here */
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      background-color: #212121;
       margin: 0;
+      margin-bottom: 200px;
       padding: 0;
     }
     #container {
-      max-width: 800px;
+      max-width: 800px;background-color: #444444;
       margin: 0 auto;
-      padding: 20px;
+      padding: 10px;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
@@ -24,12 +25,30 @@
       height: auto;
       display: block;
       margin: 0 auto;
+      border-radius: 10px;
+      user-select: none;
     }
     p {
       text-align: center;
       font-size: 18px;
-      color: #333;
+      color: #aaa;
       margin-top: 20px;
+    }
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .video-container iframe {
+      margin: 10px;
+      border-radius: 30px;
+      user-select: none;
+    }
+    .video-container p {
+      margin-top: 0px;
+      margin-bottom: 0px;
+      width: 280px;
     }
   </style>
 </head>
@@ -41,6 +60,65 @@
       Utensils for every culinary adventure!
     </p>
   </div>
+   <div class="video-container" id="player"></div>
+
+  <script>
+    var videos = [/* YOUTUBE VideoID */
+      {
+        id: "J---aiyznGQ",
+        title: "Video Title 1"
+      },
+      {
+        id: "ibX6qHonyxk",
+        title: "Video Title 2"
+      },
+      {
+        id: "eyWOh0EjXts",
+        title: "Video Title 3"
+      },
+      {
+        id: "e4e0V0-VCdM",
+        title: "Video Title 4"
+      },
+      {
+        id: "F6nDXHg9_6I",
+        title: "Video Title 5"
+      },
+      {
+        id: "Wl-9NlXey0Q",
+        title: "Video Title 6"
+      },
+      {
+        id: "RaSYzFKtvoY",
+        title: "Video Title 7"
+      },
+      {
+        id: "PxwfBn-Up5I",
+        title: "Video Title 8"
+      }
+    ];
+
+    var playerDiv = document.getElementById("player");
+
+    for (var i = 0; i < videos.length; i++) {
+      var containerDiv = document.createElement("div");
+      containerDiv.style.display = "flex";
+      containerDiv.style.flexDirection = "column";
+      containerDiv.style.alignItems = "center";
+      
+      var iframe = document.createElement("iframe");
+      iframe.width = "350";//280
+      iframe.height = "157.5";
+      iframe.src = "https://www.youtube.com/embed/" + videos[i].id;
+      iframe.frameborder = "0";iframe.style="border: none";
+      iframe.allowfullscreen = true;
+      var title = document.createElement("p");
+      title.innerHTML = videos[i].title;
+
+      containerDiv.appendChild(title);
+      containerDiv.appendChild(iframe);
+      playerDiv.appendChild(containerDiv);
+    }
+  </script>
 </body>
 </html>
-
