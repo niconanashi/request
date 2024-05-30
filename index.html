@@ -1,124 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>Spoon-Knife</title>
-  <style>
-    /* Add your custom styles here */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #212121;
-      margin: 0;
-      margin-bottom: 200px;
-      padding: 0;
-    }
-    #container {
-      max-width: 800px;background-color: #444444;
-      margin: 0 auto;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    #octocat {
-      width: 100%;
-      max-width: 512px; /* Adjust the width as needed */
-      height: auto;
-      display: block;
-      margin: 0 auto;
-      border-radius: 10px;
-      user-select: none;
-    }
-    p {
-      text-align: center;
-      font-size: 18px;
-      color: #aaa;
-      margin-top: 20px;
-    }
-    .video-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
-    .video-container iframe {
-      margin: 10px;
-      border-radius: 30px;
-      user-select: none;
-    }
-    .video-container p {
-      margin-top: 0px;
-      margin-bottom: 0px;
-      width: 280px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nico Live ID Extractor</title>
+    <style>
+        #dropzone {
+            width: 400px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            line-height: 0px;
+            margin: 20px auto;
+        }
+
+        #dropzone p {
+            margin: 60px 0;
+        }
+    </style>
 </head>
 <body>
-  <div id="container">
-    <img src="a.png" id="octocat" alt="Spoon and Knife" />
-    <!-- Feel free to change this text here -->
-    <p>
-      Utensils for every culinary adventure!
-    </p>
-  </div>
-   <div class="video-container" id="player"></div>
+    <h1>放送ネタ リクエストツール</h1>
 
-  <script>
-    var videos = [/* YOUTUBE VideoID */
-      {
-        id: "J---aiyznGQ",
-        title: "Video Title 1"
-      },
-      {
-        id: "ibX6qHonyxk",
-        title: "Video Title 2"
-      },
-      {
-        id: "eyWOh0EjXts",
-        title: "Video Title 3"
-      },
-      {
-        id: "e4e0V0-VCdM",
-        title: "Video Title 4"
-      },
-      {
-        id: "F6nDXHg9_6I",
-        title: "Video Title 5"
-      },
-      {
-        id: "Wl-9NlXey0Q",
-        title: "Video Title 6"
-      },
-      {
-        id: "RaSYzFKtvoY",
-        title: "Video Title 7"
-      },
-      {
-        id: "PxwfBn-Up5I",
-        title: "Video Title 8"
-      }
-    ];
+    <div id="dropzone" onpaste="handlePaste(event)" >
+        <p>放送URLのドラッグドロップ、Ctrl+Vで</p>
+        <p>リクエストページを開きます</p>
+    </div>
 
-    var playerDiv = document.getElementById("player");
+    <script>
+        const dropzone = document.getElementById('dropzone');
 
-    for (var i = 0; i < videos.length; i++) {
-      var containerDiv = document.createElement("div");
-      containerDiv.style.display = "flex";
-      containerDiv.style.flexDirection = "column";
-      containerDiv.style.alignItems = "center";
-      
-      var iframe = document.createElement("iframe");
-      iframe.width = "350";//280
-      iframe.height = "157.5";
-      iframe.src = "https://www.youtube.com/embed/" + videos[i].id;
-      iframe.frameborder = "0";iframe.style="border: none";
-      iframe.allowfullscreen = true;
-      var title = document.createElement("p");
-      title.innerHTML = videos[i].title;
+        dropzone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropzone.classList.add('highlight');
+        });
 
-      containerDiv.appendChild(title);
-      containerDiv.appendChild(iframe);
-      playerDiv.appendChild(containerDiv);
-    }
-  </script>
+        dropzone.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            dropzone.classList.remove('highlight');
+        });
+
+        dropzone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropzone.classList.remove('highlight');
+            handleUrl(event.dataTransfer.getData('text/plain'));
+        });
+
+        function handlePaste(event) {
+            const clipboardData = event.clipboardData || window.clipboardData;
+            const pastedText = clipboardData.getData('text');
+            handleUrl(pastedText);
+        }
+
+        function handleUrl(url) {
+            const liveId = extractLiveId(url);
+
+            if (liveId) {
+                const newTabUrl = `https://spi.nicovideo.jp/?content_id=lv${liveId}&frontend_id=9&frontend_version=506.0.0&content_type=live#/history`;
+                window.open(newTabUrl, '_blank');
+            } else {
+                alert('URLが間違っています');
+            }
+        }
+
+        function extractLiveId(url) {
+            const match = url.match(/(?:lv|live)(\d+)/i);
+            if (match) {
+                return match[1];
+            } else {
+                return null;
+            }
+        }
+    </script>
 </body>
 </html>
